@@ -21,16 +21,18 @@ class Decoder:
 
         self.get_meta_data(file_bytes[0:12])
 
-        file_size = int.from_bytes(archived_files_data[0:4], 'little')
-        next_file_offset = int.from_bytes(archived_files_data[4:12], 'little')
-        file_data_offset = int.from_bytes(archived_files_data[12:20], 'little')
-        print(file_size, file_data_offset, next_file_offset)
-        # while len(archived_files_data) > 0:
-        #     file_size = int.from_bytes(archived_files_data[0:4], 'big')
-        #     next_file_offset = int.from_bytes(archived_files_data[4:12], 'big')
-        #     file_data_offset = int.from_bytes(archived_files_data[12:20], 'big')
-        #     print(file_size, file_data_offset, next_file_offset)
-        #     archived_files_data = archived_files_data[next_file_offset::]
+        while archived_files_data:
+            file_size = int.from_bytes(archived_files_data[0:4], 'big')
+            next_file_offset = int.from_bytes(archived_files_data[4:12], 'big')
+            file_data_offset = int.from_bytes(archived_files_data[12:20], 'big')
+
+            file_bytes = archived_files_data[20:file_size+20]
+            file_string = file_bytes.decode('utf-8')
+            file_string = file_string.split('|', 1)
+            with open('output/'+file_string[0], 'w') as f:
+                f.write(file_string[1])
+
+            archived_files_data = archived_files_data[next_file_offset-1:]
 
 
 
