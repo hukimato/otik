@@ -14,10 +14,10 @@ class Coder:
         result_byte_code = self.fill_meta_data()
 
         for file in self.files:
-            with open(file, 'r') as f:
+            with open(file, 'rb') as f:
                 file_data = f.read()
                 file_data = self.compression(file_data)
-                file_length = len(file_data.encode('utf-8')) + len(file.encode('utf-8')) + 1
+                file_length = len(file_data) + len(file.encode('utf-8')) + 1
 
                 file_byte_code = bytearray()
                 file_byte_code.extend(file_length.to_bytes(4, 'big'))  # Исходный размер
@@ -26,7 +26,7 @@ class Coder:
 
                 file_byte_code.extend(bytes(file, 'utf-8'))  # Имя файла
                 file_byte_code.extend(bytes('|', 'utf-8'))  # Разделитель (| запрещена в названиях файлов)
-                file_byte_code.extend(file_data.encode('utf-8'))  # Данные файла
+                file_byte_code.extend(file_data)  # Данные файла
 
                 # Выравнивание после записи
                 while len(file_byte_code) < file_length + 20 + file_length % 8 + 7:

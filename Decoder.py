@@ -27,10 +27,12 @@ class Decoder:
             file_data_offset = int.from_bytes(archived_files_data[12:20], 'big')
 
             file_bytes = archived_files_data[20:file_size+20]
-            file_string = file_bytes.decode('utf-8')
-            file_string = file_string.split('|', 1)
-            with open('output/'+file_string[0], 'w') as f:
-                f.write(file_string[1])
+            idx = file_bytes.find(bytes('|', 'utf-8'))
+            file_name = file_bytes[:idx]
+            file_data = file_bytes[idx+1:]
+            file_name = file_name.decode('utf-8')
+            with open('output/'+file_name, 'wb') as f:
+                f.write(file_data)
 
             archived_files_data = archived_files_data[next_file_offset-1:]
 
