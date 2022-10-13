@@ -21,6 +21,9 @@ class Decoder:
 
         self.get_meta_data(file_bytes[0:12])
 
+        if self.signature != bytearray('Ъь', 'utf-8'):
+            exit('Сигнатура не совпадает')
+
         while archived_files_data:
             file_size = int.from_bytes(archived_files_data[0:4], 'big')
             next_file_offset = int.from_bytes(archived_files_data[4:12], 'big')
