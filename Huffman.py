@@ -69,7 +69,7 @@ def prepare_dict(codes_dict):
     
     return dict_bitarray
 
-
+ 
 def Huffman_Encoding(data):
     symbol_with_probs = Calculate_Probability(data)
     symbols = symbol_with_probs.keys()
@@ -101,6 +101,8 @@ def Huffman_Encoding(data):
     huffman_encoding = Calculate_Codes(nodes[0])
     encoded_output = Output_Encoded(data,huffman_encoding)
     dict_bitarray = prepare_dict(huffman_encoding)
+
+    codes.clear()
     return encoded_output, dict_bitarray
 
 def find_dict_key_by_val(dict, search_val):
@@ -123,14 +125,14 @@ def decode_dict(dict_bitarray: bitarray):
 
 def Huffman_Decoding(data: bitarray, huffman_dict_bitarray):
     huffman_dict = decode_dict(huffman_dict_bitarray)
-    decoded = bytearray()
+    decoded = bitarray()
 
     current_code = bitarray('')
     for bit in data.to01():
         current_code.extend(bit)
 
         if (current_code in huffman_dict.values()):
-            decoded.extend(find_dict_key_by_val(huffman_dict, current_code).to_bytes(1, 'big'))
+            decoded.frombytes(find_dict_key_by_val(huffman_dict, current_code).to_bytes(1, 'big'))
             current_code = bitarray()
     
-    return decoded        
+    return decoded.tobytes()      

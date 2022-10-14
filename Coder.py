@@ -25,10 +25,9 @@ class Coder:
                 file_byte_code.extend(int(0).to_bytes(8, 'big'))  # Размер данных для декода
                 file_byte_code.extend(int(0).to_bytes(1, 'big'))  # Размер данных для декода
                 file_byte_code.extend(int(0).to_bytes(1, 'big'))  # Размер данных для декода
-                file_byte_code.extend((len(file.encode('utf-8')) + 1).to_bytes(2, 'big'))
+                file_byte_code.extend((len(file.encode('utf-8'))).to_bytes(8, 'big'))
 
                 file_byte_code.extend(bytes(file, 'utf-8'))  # Имя файла
-                file_byte_code.extend(bytes('|', 'utf-8'))  # Разделитель (| запрещена в названиях файлов)
                 file_byte_code.extend(file_data)  # Данные файла
 
                 result_byte_code.extend(file_byte_code)
@@ -45,13 +44,13 @@ class Coder:
                     file_byte_code.extend(len(codes).to_bytes(8, 'big'))  # Размер данных для декода
                     file_byte_code.extend(data_offset.to_bytes(1, 'big'))  # Размер данных для декода
                     file_byte_code.extend(codes_offset.to_bytes(1, 'big'))  # Размер данных для декода
-                    file_byte_code.extend((len(file.encode('utf-8')) + 1).to_bytes(2, 'big'))
+                    file_byte_code.extend((len(file.encode('utf-8'))).to_bytes(8, 'big'))
+                    
 
                     file_byte_code.extend(bytes(file, 'utf-8'))  # Имя файла
-                    file_byte_code.extend(bytes('|', 'utf-8'))  # Разделитель (| запрещена в названиях файлов)
                     file_byte_code.extend(compressed_file_data)  # Данные файла
                     file_byte_code.extend(codes)  # Данные для декода из сжатого файла
-
+                    
                     result_compressed_byte_code.extend(file_byte_code)
 
             print('Compressed: ', len(result_compressed_byte_code))
@@ -65,7 +64,7 @@ class Coder:
 
     def compression(self, file_data):
         [data, codes] = Huffman_Encoding(file_data)
-        
+
         data.reverse()
         data_offset_bits = data.fill()
         data.reverse()
