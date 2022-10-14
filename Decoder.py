@@ -65,8 +65,8 @@ class Decoder:
         codes_offseted.frombytes(codes)
         codes_offseted = codes_offseted[codes_bits_offset:]
 
-        print(data_offseted)
-        print(codes_offseted)
+        # print(data_offseted)
+        # print(codes_offseted)
         return Huffman_Decoding(data_offseted, codes_offseted)
 
 
