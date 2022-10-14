@@ -58,8 +58,6 @@ class Coder:
             print('Uncompressed: ', len(result_byte_code))
             if (len(result_compressed_byte_code) < len(result_byte_code)):
                 result_byte_code = result_compressed_byte_code
-        
-        
 
         my_file = open('archive.myfile', 'wb')
         my_file.write(result_byte_code)
