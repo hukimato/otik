@@ -61,7 +61,6 @@ class Coder:
 
         my_file = open('archive.myfile', 'wb')
         my_file.write(result_byte_code)
-        # print(result_byte_code)
         my_file.close()
 
     def compression(self, file_data):
@@ -75,14 +74,15 @@ class Coder:
         codes_offset_bits = codes.fill()
         codes.reverse()
 
-
         return data.tobytes(), data_offset_bits, codes.tobytes(), codes_offset_bits
 
-    def fill_meta_data(self, algo_compression_manual=None):
+    def fill_meta_data(self, algo_compression_without_context_manual=None):
+        algo_compression_without_context = self.algo_compression_without_context if algo_compression_without_context_manual is None else algo_compression_without_context_manual
+
         my_file_byte_code = self.signature[:]  # Сигнатура
         my_file_byte_code.extend(self.version.to_bytes(2, 'big'))  # Версия
         my_file_byte_code.extend(int(0).to_bytes(2, 'big'))  # Резерв
-        my_file_byte_code.extend(self.algo_compression_without_context.to_bytes(1, 'big'))  # код алгоритма
+        my_file_byte_code.extend(algo_compression_without_context.to_bytes(1, 'big'))  # код алгоритма
         my_file_byte_code.extend(self.algo_compression_with_context.to_bytes(1, 'big'))  # код алгоритма
         my_file_byte_code.extend(self.algo_loss_protection.to_bytes(1, 'big'))  # код алгоритма
         my_file_byte_code.extend(self.encryption.to_bytes(1, 'big'))  # код алгоритма
