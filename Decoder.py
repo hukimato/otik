@@ -47,11 +47,9 @@ class Decoder:
             file_code = file_bytes[data_end_idx:data_end_idx + file_code_info_size]
             file_name = file_name.decode('utf-8')
 
-            print(file_name)
             file_output_data = file_data if self.algo_compression_without_context == 0 else self.decompression(file_data, file_data_bits_offset, file_code, file_code_bits_offset)
             my_file = open(f'output/{file_name}', 'wb')
             my_file.write(file_output_data)
-            # print(result_byte_code)
             my_file.close()
 
             archived_files_data = archived_files_data[26 + file_data_info_size:]
@@ -65,8 +63,6 @@ class Decoder:
         codes_offseted.frombytes(codes)
         codes_offseted = codes_offseted[codes_bits_offset:]
 
-        print(data_offseted)
-        print(codes_offseted)
         return Huffman_Decoding(data_offseted, codes_offseted)
 
 
