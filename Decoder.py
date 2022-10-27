@@ -1,6 +1,8 @@
 from bitarray import bitarray
 
 from Huffman import Huffman_Decoding
+from RLE import rle_decode
+
 
 class Decoder:
     signature = bytearray('Ъь', 'utf-8')
@@ -49,6 +51,8 @@ class Decoder:
 
             print(file_name)
             file_output_data = file_data if self.algo_compression_without_context == 0 else self.decompression(file_data, file_data_bits_offset, file_code, file_code_bits_offset)
+            if self.algo_compression_with_context != 0:
+                file_output_data = rle_decode(file_output_data)
             my_file = open(f'output/{file_name}', 'wb')
             my_file.write(file_output_data)
             # print(result_byte_code)

@@ -22,7 +22,7 @@ import sys
 
 def main():
     if sys.argv[1] == 'code':
-        coder = Coder(0, 0, 1, 0, 0)
+        coder = Coder(0, 1, 1, 0, 0)
         coder.code(sys.argv[2::])
     if sys.argv[1] == 'decode':
         decoder = Decoder()
@@ -30,3 +30,6 @@ def main():
 
 
 main()
+
+# decoder = Decoder()
+# decoder.decode('archive.myfile')

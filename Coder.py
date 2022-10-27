@@ -1,4 +1,5 @@
 from Huffman import Huffman_Decoding, Huffman_Encoding
+from RLE import rle_encode
 
 class Coder:
     signature = bytearray('Ъь', 'utf-8')
@@ -20,6 +21,9 @@ class Coder:
             with open(file, 'rb') as f:
                 file_data = f.read()
 
+                if (self.algo_compression_with_context != 0):
+                    file_data = self.context_compression(file_data)
+
                 file_byte_code = bytearray()
                 file_byte_code.extend(len(file_data).to_bytes(8, 'big'))  # Размер файла
                 file_byte_code.extend(int(0).to_bytes(8, 'big'))  # Размер данных для декода
@@ -36,6 +40,9 @@ class Coder:
             for file in self.files:
                 with open(file, 'rb') as f:
                     file_data = f.read()
+
+                    if (self.algo_compression_with_context != 0):
+                        file_data = self.context_compression(file_data)
                     
                     compressed_file_data, data_offset, codes, codes_offset = self.compression(file_data)
 
@@ -61,6 +68,9 @@ class Coder:
         my_file = open('archive.myfile', 'wb')
         my_file.write(result_byte_code)
         my_file.close()
+
+    def context_compression(self, file_data):
+        return rle_encode(file_data)
 
     def compression(self, file_data):
         [data, codes] = Huffman_Encoding(file_data)
