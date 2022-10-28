@@ -1,7 +1,19 @@
 from itertools import groupby
 
 def rle_encode(file_data):
+
     list_of_byte_count = [(k, sum(1 for _ in g)) for k,g in groupby(file_data)]
+
+    list_of_byte_count_new = []
+    index = 0
+    while index < len(list_of_byte_count):
+        if list_of_byte_count[index][1] > 127:
+            for i in range(list_of_byte_count[index][1] // 127):
+                list_of_byte_count_new.append([list_of_byte_count[index][0], 127])
+            list_of_byte_count_new.append([list_of_byte_count[index][0], list_of_byte_count[index][1] % 127])
+        else:
+            list_of_byte_count_new.append(list_of_byte_count[index])
+        index += 1
 
     result_bytearray = bytearray()
     buffer_bytearray = bytearray()

@@ -42,10 +42,11 @@ class Coder:
                     file_data = f.read()
 
                     if (self.algo_compression_with_context != 0):
+                        print(f'Длина до RLE = {len(file_data)}')
                         file_data = self.context_compression(file_data)
-                    
+                        print(f'Длина после RLE = {len(file_data)}')
                     compressed_file_data, data_offset, codes, codes_offset = self.compression(file_data)
-
+                    #print(compressed_file_data)
                     file_byte_code = bytearray()
                     file_byte_code.extend(len(compressed_file_data).to_bytes(8, 'big'))  # Размер файла
                     file_byte_code.extend(len(codes).to_bytes(8, 'big'))  # Размер данных для декода
@@ -60,8 +61,7 @@ class Coder:
                     
                     result_compressed_byte_code.extend(file_byte_code)
 
-            print('Compressed: ', len(result_compressed_byte_code))
-            print('Uncompressed: ', len(result_byte_code))
+
             if (len(result_compressed_byte_code) < len(result_byte_code)):
                 result_byte_code = result_compressed_byte_code
 
