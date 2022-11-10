@@ -1,4 +1,5 @@
 from Huffman import Huffman_Decoding, Huffman_Encoding
+from LZ77Compressor import LZ77Compressor
 from RLE import rle_encode
 
 class Coder:
@@ -42,9 +43,9 @@ class Coder:
                     file_data = f.read()
 
                     if (self.algo_compression_with_context != 0):
-                        print(f'Длина до RLE = {len(file_data)}')
+                        print(f'BEFORE LZ77: {len(file_data)}')
                         file_data = self.context_compression(file_data)
-                        print(f'Длина после RLE = {len(file_data)}')
+                        print(f'AFTER LZ77: {len(file_data)}')
                     compressed_file_data, data_offset, codes, codes_offset = self.compression(file_data)
                     #print(compressed_file_data)
                     file_byte_code = bytearray()
@@ -70,7 +71,12 @@ class Coder:
         my_file.close()
 
     def context_compression(self, file_data):
-        return rle_encode(file_data)
+        if self.algo_compression_with_context == 2:
+            comp = LZ77Compressor()
+            return bytearray(comp.compress(file_data))
+        elif self.algo_compression_with_context == 1:
+            return rle_encode(file_data)
+        return file_data
 
     def compression(self, file_data):
         [data, codes] = Huffman_Encoding(file_data)

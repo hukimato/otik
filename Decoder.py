@@ -1,6 +1,7 @@
 from bitarray import bitarray
 
 from Huffman import Huffman_Decoding
+from LZ77Compressor import LZ77Compressor
 from RLE import rle_decode
 
 
@@ -52,7 +53,11 @@ class Decoder:
             print(file_name)
             file_output_data = file_data if self.algo_compression_without_context == 0 else self.decompression(file_data, file_data_bits_offset, file_code, file_code_bits_offset)
             if self.algo_compression_with_context != 0:
-                file_output_data = rle_decode(file_output_data)
+                if self.algo_compression_with_context == 2:
+                    comp = LZ77Compressor()
+                    file_output_data = comp.decompress(bitarray(self.bytearray_to_bitarray(file_data)))
+                elif self.algo_compression_with_context == 1:
+                    file_output_data = rle_decode(file_output_data)
             my_file = open(f'output/{file_name}', 'wb')
             my_file.write(file_output_data)
             # print(result_byte_code)
@@ -73,7 +78,8 @@ class Decoder:
         # print(codes_offseted)
         return Huffman_Decoding(data_offseted, codes_offseted)
 
-
+    def bytearray_to_bitarray(self, data):
+        return ''.join(format(byte, '08b') for byte in data)
 
 
 
